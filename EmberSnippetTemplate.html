@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <title>EmberSnippetTemplate</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./lib/bootstrap.min.css">
+        <link rel="stylesheet" href="./lib/font-awesome.min.css">
+        <link rel="stylesheet" href="./lib/animate.css">
+        <link rel="stylesheet" href="./lib/style.min.css">
+        <script src="./lib/jquery-1.11.2.min.js"></script>
+        <script src="./lib/handlebars-v3.0.0.js"></script>
+        <script src="./lib/ember-template-compiler.js"></script>
+        <script src="./lib/ember.js"></script>
+        <script src="./lib/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+
+	<script>
+		App = Ember.Application.create({
+		    rootElement: '#ember-app'
+		});
+
+		App.Router.map(function () {
+		    this.resource('index', {path: '/'});
+		});
+
+		App.ApplicationRoute = Ember.Route.extend({});
+		App.ApplicationController = Ember.Controller.extend({});
+		App.ApplicationView = Ember.View.extend({});
+
+	    App.IndexController = Ember.ObjectController.reopen({
+	    	/* Copy the code below into the Controller ace editor */
+
+			/* End of Controller Code */
+	        actions: {
+	        	/* Copy the code below into the Controller Actions ace editor */
+
+				/* End of Controller Actions Code */
+	        }
+	    });
+	</script>
+
+	<script type="text/x-handlebars" data-template-name="index">
+		/* Copy the code below into the Template Code ace editor */
+
+		/* End of Template Code */
+	</script>
+
+	<form id="emberForm" method="post" >
+        <div id="ember-app"></div>
+    </form>
+
+	</body>
+</html>
