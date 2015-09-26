@@ -17,19 +17,7 @@
     <body>
 
 	<script>
-		App = Ember.Application.create({
-		    rootElement: '#ember-app'
-		});
-
-		App.Router.map(function () {
-		    this.resource('index', {path: '/'});
-		});
-
-		App.ApplicationRoute = Ember.Route.extend({});
-		App.ApplicationController = Ember.Controller.extend({});
-		App.ApplicationView = Ember.View.extend({});
-
-	    App.IndexController = Ember.ObjectController.reopen({
+	    App.ApplicationController = Ember.ObjectController.reopen({
 	    	/* Copy the code below into the Controller ace editor */
 
 			/* End of Controller Code */
@@ -41,7 +29,7 @@
 	    });
 	</script>
 
-	<script type="text/x-handlebars" data-template-name="index">
+	<script type="text/x-handlebars" data-template-name="application">
 		/* Copy the code below into the Template Code ace editor */
 
 		/* End of Template Code */

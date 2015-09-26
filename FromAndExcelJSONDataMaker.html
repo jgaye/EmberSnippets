@@ -21,15 +21,7 @@
 		    rootElement: '#ember-app'
 		});
 
-		App.Router.map(function () {
-		    this.resource('index', {path: '/'});
-		});
-
-		App.ApplicationRoute = Ember.Route.extend({});
-		App.ApplicationController = Ember.Controller.extend({});
-		App.ApplicationView = Ember.View.extend({});
-
-	    App.IndexController = Ember.ObjectController.reopen({
+	    App.ApplicationController = Ember.Controller.extend({
 	    	/* Copy the code below into the Controller ace editor */
 
 			/* End of Controller Code */
@@ -109,42 +101,49 @@
 	    });
 	</script>
 
-	<script type="text/x-handlebars" data-template-name="index">
-      /* Copy the code below into the Template Code ace editor */
+	<script type="text/x-handlebars" data-template-name="application">
+      <!-- Copy the code below into the Template Code ace editor -->
       
-      /*
-      You will need this lib import for this snippet to work
-      <script src="/assets/javascripts/plugins/js-xlsx/xlsx.core.min.js"></script>
-      */
+      <!-- You will need this lib import for this snippet to work
+      <script src="/assets/javascripts/plugins/js-xlsx/xlsx.core.min.js"></script> -->
       
-      <form>
-        
-        <div class="form-group">
-          {{input type="file" class="form-control" name="excelLoader" id="excelLoader"}}
-        </div>
-        
-        <div class="form-group">
-          <label for="toField">To: </label>
-          {{input type="text" class="form-control" name="toField" id="toField"}}
-        </div>
-        <div class="form-group">
-          <label for="subjectField">Subject: </label>
-          {{input type="text" class="form-control" name="subjectField" id="subjectField"}}
-        </div>
-        <div class="form-group">
-          <label for="contentField">Content: </label><br>
-          {{textarea rows="7" class="form-control" name="contentField" id="contentField"}}
-        </div>
-        <div class="form-group">
-          <button {{action 'loadexcel'}} class="btn btn-warning">Build Data</button>
-        </div>
-        <div class="form-group">
-          <pre id="jsonFact"></pre>
-        </div>
-        
-      </form>
+      <input type="hidden" name="jsonData">
+  
+      <div class="panel panel-default">
+        <div class="panel-heading">Email data builder</div>
+        <div class="panel-body">
+      
+          <form>
 
-      /* End of Template Code */
+            <div class="form-group">
+              {{input type="file" class="form-control" name="excelLoader" id="excelLoader"}}
+            </div>
+
+            <div class="form-group">
+              <label for="toField">To: </label>
+              {{input type="text" class="form-control" name="toField" id="toField"}}
+            </div>
+            <div class="form-group">
+              <label for="subjectField">Subject: </label>
+              {{input type="text" class="form-control" name="subjectField" id="subjectField"}}
+            </div>
+            <div class="form-group">
+              <label for="contentField">Content: </label><br>
+              {{textarea rows="7" class="form-control" name="contentField" id="contentField"}}
+            </div>
+            <div class="form-group">
+              <button {{action 'loadexcel'}} class="btn btn-warning">Build Data</button>
+            </div>
+            <div class="form-group">
+              <pre id="jsonFact"></pre>
+            </div>
+
+          </form>
+          
+        </div>
+      </div>
+
+      <!-- End of Template Code -->
 	</script>
 
 	<form id="emberForm" method="post" >
