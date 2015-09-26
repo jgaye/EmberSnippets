@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <title>Build JSON data from a form and an excel document</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./lib/bootstrap.min.css">
+        <link rel="stylesheet" href="./lib/font-awesome.min.css">
+        <link rel="stylesheet" href="./lib/animate.css">
+        <link rel="stylesheet" href="./lib/style.min.css">
+        <script src="./lib/jquery-1.11.2.min.js"></script>
+        <script src="./lib/handlebars-v3.0.0.js"></script>
+        <script src="./lib/ember-template-compiler.js"></script>
+        <script src="./lib/ember.js"></script>
+        <script src="./lib/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+
+	<script>
+		App = Ember.Application.create({
+		    rootElement: '#ember-app'
+		});
+
+		App.Router.map(function () {
+		    this.resource('index', {path: '/'});
+		});
+
+		App.ApplicationRoute = Ember.Route.extend({});
+		App.ApplicationController = Ember.Controller.extend({});
+		App.ApplicationView = Ember.View.extend({});
+
+	    App.IndexController = Ember.ObjectController.reopen({
+	    	/* Copy the code below into the Controller ace editor */
+
+			/* End of Controller Code */
+	        actions: {
+              /* Copy the code below into the Controller Actions ace editor */
+
+              //Create the json facts from the loaded excel and the form fields
+              loadexcel: function(){
+
+                var files = $("#excelLoader")[0].files;
+                if (files.length == 0){
+
+                  //Don't do anything if no file was loaded
+                  alert("Please choose an Excel file")
+
+                } else {
+
+                  //Read the loaded file
+                  var i,f;
+                  for (i = 0, f = files[i]; i != files.length; ++i) {
+
+                    if (f.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+
+                      //Disable the Send button and warn the user
+                      $("#sendButton").prop('disabled', true);
+                      alert("Please choose an Excel file")
+
+                    } else {
+
+                      //Init the target Json array
+                      var jsonFactJson = {"target":[]};
+                      $("#sendButton").prop('disabled', false);
+
+                      var reader = new FileReader();
+                      var name = f.name;
+                      reader.onload = function(e) {
+                        var data = e.target.result;
+
+                        //JS-XLSX magic: transform the excel content into a JSON Array
+                        var workbook = XLSX.read(data, {type: 'binary'});
+
+                        var result = {};
+                        var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]]);
+                        if(roa.length > 0){
+
+                            //Set target to the JSON Array value
+                            jsonFactJson.target = roa;
+                        }
+
+                        //Add the form fields to each JSON object of target
+                        $.each(jsonFactJson.target, function(index, value){
+                          value.to = $("#toField").val()
+                          value.subject = $("#subjectField").val()
+                          value.content = $("#contentField").val()
+                        })
+
+                        //Put the JSON data in a process var container
+                        $('[name=jsonData]').val(jsonFactJson);
+
+                        //Build the String to be displayed to the user
+                        var jsonFactString = JSON.stringify(jsonFactJson);
+                        $("#jsonFact")
+                          .text(jsonFactString
+                            .replace(/,/g, ",\n")
+                            .replace(/{/g, "{\n")
+                            .replace(/}/g, "\n}")
+                           );
+
+                      };
+                    reader.readAsBinaryString(f);
+                    }
+                  }
+                }
+              }
+              /* End of Controller Actions Code */
+	        }
+	    });
+	</script>
+
+	<script type="text/x-handlebars" data-template-name="index">
+      /* Copy the code below into the Template Code ace editor */
+      
+      /*
+      You will need this lib import for this snippet to work
+      <script src="/assets/javascripts/plugins/js-xlsx/xlsx.core.min.js"></script>
+      */
+      
+      <form>
+        
+        <div class="form-group">
+          {{input type="file" class="form-control" name="excelLoader" id="excelLoader"}}
+        </div>
+        
+        <div class="form-group">
+          <label for="toField">To: </label>
+          {{input type="text" class="form-control" name="toField" id="toField"}}
+        </div>
+        <div class="form-group">
+          <label for="subjectField">Subject: </label>
+          {{input type="text" class="form-control" name="subjectField" id="subjectField"}}
+        </div>
+        <div class="form-group">
+          <label for="contentField">Content: </label><br>
+          {{textarea rows="7" class="form-control" name="contentField" id="contentField"}}
+        </div>
+        <div class="form-group">
+          <button {{action 'loadexcel'}} class="btn btn-warning">Build Data</button>
+        </div>
+        <div class="form-group">
+          <pre id="jsonFact"></pre>
+        </div>
+        
+      </form>
+
+      /* End of Template Code */
+	</script>
+
+	<form id="emberForm" method="post" >
+        <div id="ember-app"></div>
+    </form>
+
+	</body>
+</html>
