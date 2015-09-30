@@ -80,10 +80,10 @@
                         })
 
                         //Put the JSON data in a process var container
-                        $('[name=jsonData]').val(jsonFactJson);
-
-                        //Build the String to be displayed to the user
                         var jsonFactString = JSON.stringify(jsonFactJson);
+                        $('[name=jsonData]').val(jsonFactString);
+                        
+                        //Build the String to be displayed to the user
                         $("#jsonFact")
                           .text(jsonFactString
                             .replace(/,/g, ",\n")
