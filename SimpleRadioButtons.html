@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>EmberSnippetTemplate</title>
+        <title>Simple radio buttons group, save the checked radio value if saveRadioButton is called </title>
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./lib/bootstrap.min.css">
@@ -24,6 +24,12 @@
 	    App.ApplicationController = Ember.ObjectController.reopen({
 	    	/* Copy the code below into the Controller ace editor */
           
+            //Change your radio options here
+            options: ["radio1", "radio2", "radio3"],
+          
+            saveRadioButton: function(){
+                $('[name=radioGroup]').val($("input:radio[name ='radioGroup']:checked").val());
+            },
 			/* End of Controller Code */
 	        actions: {
 	        	/* Copy the code below into the Controller Actions ace editor */
@@ -36,9 +42,14 @@
 	<script type="text/x-handlebars" data-template-name="application">
       <div class="panel panel-default"><div class="container">
 		<!--  Copy the code below into the Template Code ace editor -->
-        
+        <input type="hidden" name="radioGroup">
+
+        {{#each option in options}}
+          {{input name="radioGroup" type="radio" value=option}} {{option}}
+        {{/each}}
+      
 		<!--  End of Template Code -->
-        </div></div>
+      </div></div>
 	</script>
 
 	<form id="emberForm" method="post" >

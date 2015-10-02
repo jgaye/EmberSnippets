@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>EmberSnippetTemplate</title>
+        <title>Simple Dropdown, its selected option is saved if saveDropdownOption method is called</title>
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./lib/bootstrap.min.css">
@@ -24,6 +24,13 @@
 	    App.ApplicationController = Ember.ObjectController.reopen({
 	    	/* Copy the code below into the Controller ace editor */
           
+            //Change the options of the dropdown here
+            options: ["option1", "option2", "option3"],
+          
+            saveDropdownOption: function(){
+                $('[name=dropdown]').val($("#dropdown").val());
+            },
+
 			/* End of Controller Code */
 	        actions: {
 	        	/* Copy the code below into the Controller Actions ace editor */
@@ -37,6 +44,10 @@
       <div class="panel panel-default"><div class="container">
 		<!--  Copy the code below into the Template Code ace editor -->
         
+        <input type="hidden" name="dropdown">
+        
+        {{view "select" id="dropdown" content=options}}
+
 		<!--  End of Template Code -->
         </div></div>
 	</script>

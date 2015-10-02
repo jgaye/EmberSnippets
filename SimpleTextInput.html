@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>EmberSnippetTemplate</title>
+        <title>Simple text input, save the text value if saveTextinput is called </title>
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./lib/bootstrap.min.css">
@@ -23,7 +23,9 @@
       
 	    App.ApplicationController = Ember.ObjectController.reopen({
 	    	/* Copy the code below into the Controller ace editor */
-          
+            saveTextinput: function(){
+                $('[name=textinput]').val($("#textinput").val());
+            },
 			/* End of Controller Code */
 	        actions: {
 	        	/* Copy the code below into the Controller Actions ace editor */
@@ -36,9 +38,13 @@
 	<script type="text/x-handlebars" data-template-name="application">
       <div class="panel panel-default"><div class="container">
 		<!--  Copy the code below into the Template Code ace editor -->
-        
+      
+        <input type="hidden" name="textinput">
+
+        {{input type="text" id="textinput" placeholder="Enter your text here"}}
+      
 		<!--  End of Template Code -->
-        </div></div>
+      </div></div>
 	</script>
 
 	<form id="emberForm" method="post" >

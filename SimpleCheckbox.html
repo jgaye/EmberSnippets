@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>EmberSnippetTemplate</title>
+        <title>Simple checkbox, save the checked state as a boolean value if saveCheckboxCheck is called </title>
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./lib/bootstrap.min.css">
@@ -23,7 +23,9 @@
       
 	    App.ApplicationController = Ember.ObjectController.reopen({
 	    	/* Copy the code below into the Controller ace editor */
-          
+            saveCheckboxCheck: function(){
+                $('[name=checkbox]').val($("#checkbox").is(':checked'));
+            },
 			/* End of Controller Code */
 	        actions: {
 	        	/* Copy the code below into the Controller Actions ace editor */
@@ -36,9 +38,13 @@
 	<script type="text/x-handlebars" data-template-name="application">
       <div class="panel panel-default"><div class="container">
 		<!--  Copy the code below into the Template Code ace editor -->
-        
+      
+        <input type="hidden" name="checkbox">
+
+        {{input type="checkbox" id="checkbox"}} Check me
+      
 		<!--  End of Template Code -->
-        </div></div>
+      </div></div>
 	</script>
 
 	<form id="emberForm" method="post" >
