@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <title>Advanced form containing bootstrapped inputs, Will save all on approve / reject button</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./lib/bootstrap.min.css">
+        <link rel="stylesheet" href="./lib/font-awesome.min.css">
+        <link rel="stylesheet" href="./lib/animate.css">
+        <link rel="stylesheet" href="./lib/style.min.css">
+        <script src="./lib/jquery-1.11.2.min.js"></script>
+        <script src="./lib/handlebars-v3.0.0.js"></script>
+        <script src="./lib/ember-template-compiler.js"></script>
+        <script src="./lib/ember.js"></script>
+        <script src="./lib/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+
+	<script>
+        App = Ember.Application.create({
+		    rootElement: '#ember-app'
+		});
+      
+	    App.ApplicationController = Ember.ObjectController.reopen({
+	    	/* Copy the code below into the Controller ace editor */
+          
+            saveTextinput: function(){
+                $('[name=textinput]').val($("#textinput").val());
+            },
+            saveTextarea: function(){
+                $('[name=textarea]').val($("#textarea").val());
+            },
+          
+            //Change your radio options here
+            radios: ["radio1", "radio2", "radio3"],
+            saveRadioButton: function(){
+                $('[name=radioGroup]').val($("input:radio[name ='radioGroup']:checked").val());
+            },
+            saveCheckboxCheck: function(){
+                $('[name=checkbox]').val($("#checkbox").is(':checked'));
+            },
+          
+            options: ["option1", "option2", "option3"],
+            saveDropdownOption: function(){
+                $('[name=dropdown]').val($("#dropdown").val());
+            },
+          
+			/* End of Controller Code */
+	        actions: {
+	        	/* Copy the code below into the Controller Actions ace editor */
+              
+                goapprove: function(){
+                  this.saveTextinput();
+                  this.saveTextarea();
+                  this.saveRadioButton();
+                  this.saveCheckboxCheck();
+                  this.saveDropdownOption();
+                  
+                  $("[name=approve]").val(true);
+                  
+                  this.set("isSubmitting", true );
+                  $('#emberForm').submit();
+                },
+                goreject: function(){
+                  this.saveTextinput();
+                  this.saveTextarea();
+                  this.saveRadioButton();
+                  this.saveCheckboxCheck();
+                  this.saveDropdownOption();
+                  
+                  $("[name=approve]").val(false);
+                  
+                  this.set("isSubmitting", true );
+                  $('#emberForm').submit();
+                }
+
+				/* End of Controller Actions Code */
+	        }
+	    });
+	</script>
+
+	<script type="text/x-handlebars" data-template-name="application">
+      <!--  Copy the code below into the Template Code ace editor -->
+      
+      <div class="panel panel-default">
+        <div class="panel-heading">Advanced Bootstrap Form Snippet</div>
+        <div class="panel-body">
+      
+        <input type="hidden" name="textinput">
+        <input type="hidden" name="textarea">
+        
+        <input type="hidden" name="radioGroup">
+        <input type="hidden" name="checkbox">
+        
+        <input type="hidden" name="dropdown">
+        
+        <input type="hidden" name="approve">
+
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="textinput" class="col-lg-2 control-label">Text Input</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" id="textinput" placeholder="Enter your text here"}}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="textarea" class="col-lg-2 control-label">Text Area</label>
+            <div class="col-lg-10">
+              {{textarea class="form-control" id="textarea" placeholder="Enter your text here"}}
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+              {{#each option in radios}}
+                <div class="radio">
+                  <label>
+                      {{input name="radioGroup" type="radio" value=option}} {{option}}
+                  </label>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+          <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <div class="checkbox">
+              <label>
+                {{input type="checkbox" id="checkbox"}} Check me
+              </label>
+            </div>
+          </div>
+        </div>
+          <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+              {{view "select" class="form-control" id="dropdown" content=options}}
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+              <button type="button" class="btn btn-success" {{action "goapprove"}}>Approve</button>
+              <button type="button" class="btn btn-error" {{action "goreject"}}>Reject</button>
+            </div>
+          </div>
+        </form>
+      
+      </div></div>
+
+      <!--  End of Template Code -->
+	</script>
+
+	<form id="emberForm" method="post" >
+        <div id="ember-app"></div>
+    </form>
+
+	</body>
+</html>
