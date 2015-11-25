@@ -21,7 +21,7 @@
 		    rootElement: '#ember-app'
 		});
       
-	    App.ApplicationController = Ember.ObjectController.reopen({
+	    App.ApplicationController = Ember.Controller.extend({
 	    	/* Copy the code below into the Controller ace editor */
             saveCheckboxCheck: function(){
                 $('[name=checkbox]').val($("#checkbox").is(':checked'));
