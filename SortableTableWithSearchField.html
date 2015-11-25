@@ -1,0 +1,217 @@
+<html>
+    <head>
+        <title>Sortable table build from json array, and a live search field linked to all entries. The selected Json object is saved on submit</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./lib/bootstrap.min.css">
+        <link rel="stylesheet" href="./lib/font-awesome.min.css">
+        <link rel="stylesheet" href="./lib/animate.css">
+        <link rel="stylesheet" href="./lib/style.min.css">
+        <script src="./lib/jquery-1.11.2.min.js"></script>
+        <script src="./lib/handlebars-v3.0.0.js"></script>
+        <script src="./lib/ember-template-compiler.js"></script>
+        <script src="./lib/ember.js"></script>
+        <script src="./lib/bootstrap.min.js"></script>
+      
+      <!--Dummy data-->
+        <script> 
+          var facts = [
+            {
+              "KeyID": "1",
+              "Postcode": "RG45 AAA",
+              "PropertyID": "12341",
+              "Landlord": "Mr. Rochester",
+              "Status": "checkedin"
+            },
+            {
+              "KeyID": "2",
+              "Postcode": "RG45 BBB",
+              "PropertyID": "12342",
+              "Landlord": "Ms. Eyre",
+              "Status": "checkedout"
+            },
+            {
+              "KeyID": "3",
+              "Postcode": "RG45 CCC",
+              "PropertyID": "12343",
+              "Landlord": "Mr. Micawber",
+              "Status": "checkedin"
+            },
+            {
+              "KeyID": "4",
+              "Postcode": "RG45 DDD",
+              "PropertyID": "12344",
+              "Landlord": "Ms. Micawber",
+              "Status": "checkedin"
+            },
+            {
+              "KeyID": "5",
+              "Postcode": "RG45 EEE",
+              "PropertyID": "12345",
+              "Landlord": "Mr. Heep",
+              "Status": "checkedout"
+            },
+            {
+              "KeyID": "6",
+              "Postcode": "RG45 FFF",
+              "PropertyID": "12346",
+              "Landlord": "Mrs. Trotwood",
+              "Status": "checkedin"
+            },
+            {
+              "KeyID": "7",
+              "Postcode": "RG45 GGG",
+              "PropertyID": "12347",
+              "Landlord": "Mr. Stark",
+              "Status": "checkedout"
+            },
+            {
+              "KeyID": "8",
+              "Postcode": "RG45 HHH",
+              "PropertyID": "12348",
+              "Landlord": "Ms. Romanov",
+              "Status": "checkedout"
+            },
+            {
+              "KeyID": "9",
+              "Postcode": "RG45 III",
+              "PropertyID": "12349",
+              "Landlord": "Mr. Brian",
+              "Status": "checkedin"
+            },
+            {
+              "KeyID": "10",
+              "Postcode": "RG45 JJJ",
+              "PropertyID": "123410",
+              "Landlord": "Mr. Lancelot",
+              "Status": "checkedout"
+            }
+          ];
+        </script>
+      
+<!--        Tablesorter library required-->
+        <script src="./lib/tablesorter/jquery.tablesorter.min.js"></script>
+        <link rel="stylesheet" href="./lib/tablesorter/themes/blue/style.css">
+      
+    </head>
+    <body>
+
+	<script>
+        App = Ember.Application.create({
+		    rootElement: '#ember-app'
+		});
+      
+	    App.ApplicationController = Ember.Controller.extend({
+                      
+	    	/* Copy the code below into the Controller ace editor */
+
+			/* End of Controller Code */
+	        actions: {
+	        	/* Copy the code below into the Controller Actions ace editor */
+                filterTable: function(){
+                  if ($("#searchField").val().length === 0){
+                      $("#sortableTable tbody tr").show();
+                      return false;
+                  }
+
+                  $("#sortableTable tbody tr").each(function(index, row) {
+
+                      if($(row).children().text().toUpperCase().indexOf($("#searchField").val().toUpperCase()) != -1){
+                          $(row).show();
+                      } else {
+                          $(row).hide();
+                      }
+
+                  });
+                },
+              
+                goAction: function(){
+                  var $inputs = $('input:radio:checked');
+                  if ($inputs.length == 0){
+                      alert("Please select one row.")
+                  }
+                  else {
+                      //Save the Json Object
+                      $('[name=jsonRow]').val($('input:radio:checked').val());
+
+                      this.set("isSubmitting", true );
+                      $('#emberForm').submit();
+                  }
+                }
+
+				/* End of Controller Actions Code */
+	        }
+	    });
+    
+        $(document).ready( function(){
+          
+          $("#form").append($("<table>").addClass("tablesorter").attr("id", "sortableTable"));
+          
+          $("#sortableTable")
+            .append($("<thead>").append($("<tr>")))
+            .append($("<tbody>"))
+          
+          $.each(facts[0], function(key,value){
+            $("#sortableTable thead tr").append($("<th>").text(key))
+          })
+
+          $.each(facts, function(index, object){
+            $("#sortableTable tbody")
+              .append($("<tr>")
+                .append($("<td>")
+                  .append($("<input>")
+                      .attr("type", "radio")
+                      .attr("name", "row")
+                      .val(JSON.stringify(object))
+                  )
+                )
+              )
+            
+            $.each(object, function(key,value){
+              $("#sortableTable tbody tr:last")
+                .append($("<td>").text(value))
+            })
+          });
+
+          //Make the tabe sortable
+          $("#sortableTable").tablesorter({ 
+              // sort on the date column, order desc 
+              sortList: [[1,1]] 
+          }); 
+
+          //Activate live search
+          $("#searchField").keyup(function(){
+              //Be sure to change the :application on the next line with your Controller name e.g. :index
+              var controller = App.__container__.lookup("controller:application");
+              var boundSend = controller.send.bind(controller);
+              boundSend('filterTable','External Bind');
+          })
+      })
+	</script>
+
+	<script type="text/x-handlebars" data-template-name="application">
+		<!--  Copy the code below into the Template Code ace editor -->
+      
+        <h1 class="organization__title">Please select a row:</h1>
+        <form class="form-horizontal" id="form">
+        	<div class="form-group">
+            <label for="searchField" class="col-lg-2 control-label">Search field</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" id="searchField" placeholder=""}}
+            </div>
+          </div>
+        </form>
+
+        <button id="goAction" {{action 'goAction'}} class="btn">Select</button>
+      
+        <input type="hidden" name="jsonRow">
+      
+		<!--  End of Template Code -->
+	</script>
+
+	<form id="emberForm" method="post" >
+        <div id="ember-app"></div>
+    </form>
+
+	</body>
+</html>
