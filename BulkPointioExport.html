@@ -1,0 +1,122 @@
+<html>
+    <head>
+        <title>EmberSnippetTemplate</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./lib/bootstrap.min.css">
+        <link rel="stylesheet" href="./lib/font-awesome.min.css">
+        <link rel="stylesheet" href="./lib/animate.css">
+        <link rel="stylesheet" href="./lib/style.min.css">
+        <script src="./lib/jquery-1.11.2.min.js"></script>
+        <script src="./lib/handlebars-v3.0.0.js"></script>
+        <script src="./lib/ember-template-compiler.js"></script>
+        <script src="./lib/ember.js"></script>
+        <script src="./lib/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+
+	<script>
+        App = Ember.Application.create({
+		    rootElement: '#ember-app'
+		});
+      
+	    App.ApplicationController = Ember.Controller.extend({
+	    	/* Copy the code below into the Controller ace editor */
+            host: "",
+            username: "",
+            password: "",
+            apikey: "3E327883-78B1-4722-AA4F154822101078",
+			/* End of Controller Code */
+	        actions: {
+	        	/* Copy the code below into the Controller Actions ace editor */
+                golist: function(){
+                  
+                  if (this.get('host').substr(this.get('host').length - 1) != "/")
+                    this.set('host', this.get('host') +"/");
+                  
+                  Ember.$.ajax({
+                    url: this.get('host') + "auth?email=" + this.get('username') + "&password=" + this.get('password') + "&apikey=" + this.get('apikey'),
+                    type: "POST",
+                  }).done(function(data){
+                    $("#log").prepend($("<p>").text("login successful"))
+                  }).fail( function(){
+                    $("#log").prepend($("<p>").text("login failed"))
+                  }).then(function(data){
+                    var sessionKey = data.RESULT.SESSIONKEY;
+                    Ember.$.ajax({
+                      url: this.get('host') + "templates?Authorization=" +sessionKey,
+                      type: "GET",
+                      contentType: "application/json"
+                    }).done(function(data){
+                      $("#log").prepend($("<p>").text("listing templates successful"));
+                    }).fail( function(){
+                      $("#log").prepend($("<p>").text("listing processes failed"))
+                    }).then(function(data){
+                      data.templates.forEach(function(template, index){
+                        $("#log").prepend($("<p>").text(template.name))
+                        Ember.$.ajax({
+                          url: this.get('host') + "exports/"+template.id+"?Authorization=" +sessionKey,
+                          type: "GET",
+                          contentType: "application/json"
+                        }).done(function(data){
+                          var json = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+                          $("#log").prepend($('<a class="jsonLink" href="data:' + json +'" download="' +template.name+'.json">'+template.name + ' export here</a><br>'));
+                        }).fail( function(){
+                          $("#log").prepend($("<p>").text(template.name + " export failed"))
+                        })
+                      }.bind(this))
+                    }.bind(this))
+                  }.bind(this))  
+                },
+              
+              goexport: function(){
+                $(".jsonLink").each(function(index, link){
+                  $(link)[0].click();
+                })
+              }
+				/* End of Controller Actions Code */
+	        }
+	    });
+	</script>
+
+	<script type="text/x-handlebars" data-template-name="application">
+      <div class="panel panel-default"><div class="container">
+		<!--  Copy the code below into the Template Code ace editor -->
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="textinput" class="col-lg-2 control-label">Server</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" id="server" value=host}}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="textinput" class="col-lg-2 control-label">Username</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" id="username" value=username}}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="textinput" class="col-lg-2 control-label">Password</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="password" id="password" value=password}}
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+              <button type="button" class="btn btn-success" {{action "golist"}}>List Apps Export Link</button>
+               <button type="button" class="btn btn-success" {{action "goexport"}}>Export All</button> 
+            </div>
+          </div>
+        </form>
+        <pre id="log"></pre>
+		<!--  End of Template Code -->
+        </div></div>
+	</script>
+
+	<form id="emberForm" method="post" >
+        <div id="ember-app"></div>
+    </form>
+
+	</body>
+</html>
