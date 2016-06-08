@@ -1,0 +1,183 @@
+<html>
+    <head>
+        <title>EmberSnippetTemplate</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./lib/bootstrap.min.css">
+        <link rel="stylesheet" href="./lib/font-awesome.min.css">
+        <link rel="stylesheet" href="./lib/animate.css">
+        <link rel="stylesheet" href="./lib/style.min.css">
+        <script src="./lib/jquery-1.11.2.min.js"></script>
+        <script src="./lib/handlebars-v3.0.0.js"></script>
+        <script src="./lib/ember-template-compiler.js"></script>
+        <script src="./lib/ember.js"></script>
+        <script src="./lib/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+
+	<script>
+        App = Ember.Application.create({
+		    rootElement: '#ember-app'
+		});
+      
+	    App.ApplicationController = Ember.Controller.extend({
+	    	/* Copy the code below into the Controller ace editor */
+			/* End of Controller Code */
+	        actions: {
+	        	/* Copy the code below into the Controller Actions ace editor */
+                editFiles: function(){
+                  var filesInput = $("#filesInput")[0];
+                  if (filesInput.files && filesInput.files[0]){
+                    
+                    $.each(filesInput.files, function(index, file){
+                      
+                      var reader = new FileReader();
+                      reader.onload = function(){
+                        var text = reader.result;
+                        var json = JSON.parse(text);
+                        
+                        if (json.name){
+                          
+                          $("#log").prepend($("<p>").text(json.name + " loaded"));
+
+                          var editedJson = json;
+
+                          if (this.get('appappid')){
+                            editedJson.template.owner.appid = this.get('appappid')
+                          }
+                          if (this.get('apporg')){
+                            editedJson.template.owner.org = this.get('apporg')
+                          }
+                          if (this.get('appuser')){
+                            editedJson.template.owner.user = this.get('appuser')
+                          }
+                          
+                          if (editedJson.forms != undefined){
+                            editedJson.forms.forEach(function(form){
+                              if (this.get('formappid')){
+                                form.owner.appid = this.get('formappid')
+                              }
+                              if (this.get('formorg')){
+                                form.owner.org = this.get('formorg')
+                              }
+                              if (this.get('formuser')){
+                                form.owner.user = this.get('formuser')
+                              }
+                            }.bind(this));
+                          }
+
+                          if (editedJson.facts != undefined){
+                            editedJson.facts.forEach(function(fact){
+                              if (this.get('factappid')){
+                                fact.owner.appid = this.get('factappid')
+                              }
+                              if (this.get('factorg')){
+                                fact.owner.org = this.get('factorg')
+                              }
+                              if (this.get('factuser')){
+                                fact.owner.user = this.get('factuser')
+                              }
+                            }.bind(this));
+                          }
+
+                          $("#log").prepend($("<p>").text(json.name + " edited"));
+
+                          var finalJson = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(editedJson));
+
+                          $("#log").prepend($('<a class="jsonLink" href="data:' + finalJson + '" download="' +editedJson.name+'.json">'+editedJson.name + ' export here</a><br>'));
+                        } else {
+                          $("#log").prepend($("<p>").text("One file is not a Point.io App json."));
+                        }
+                      }.bind(this);
+                      
+                      
+                      reader.readAsText(file);
+                    }.bind(this))
+                    
+                  }
+                },
+              
+                goexport: function(){
+                  $(".jsonLink").each(function(index, link){
+                    $(link)[0].click();
+                  })
+                }
+				/* End of Controller Actions Code */
+	        }
+	    });
+	</script>
+
+	<script type="text/x-handlebars" data-template-name="application">
+      <div class="panel panel-default"><div class="panel-body container">
+		<!--  Copy the code below into the Template Code ace editor -->
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="textinput" class="col-lg-2 control-label">Files to edit</label>
+            <div class="col-lg-10">
+              <input type="file" multiple id="filesInput">
+            </div>
+          </div>
+          <div class="form-group">
+            <h1>App Owner</h1>
+            <label for="textinput" class="col-lg-2 control-label">appid</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" value=appappid placeholder="if left empty the original value is kept"}}
+            </div>
+            <label for="textinput" class="col-lg-2 control-label">org</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" value=apporg placeholder="if left empty the original value is kept"}}
+            </div>
+            <label for="textinput" class="col-lg-2 control-label">user</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" value=appuser placeholder="if left empty the original value is kept"}}
+            </div>
+          </div>
+          <div class="form-group">
+            <h1>Forms Owner</h1>
+            <label for="textinput" class="col-lg-2 control-label">appid</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" id="formsappid" placeholder="if left empty the original value is kept"}}
+            </div>
+            <label for="textinput" class="col-lg-2 control-label">org</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" id="formsorg" placeholder="if left empty the original value is kept"}}
+            </div>
+            <label for="textinput" class="col-lg-2 control-label">user</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" id="formsuser" placeholder="if left empty the original value is kept"}}
+            </div>
+          </div>
+          <div class="form-group">
+            <h1>Facts Owner</h1>
+            <label for="textinput" class="col-lg-2 control-label">appid</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" id="factsappid" placeholder="if left empty the original value is kept"}}
+            </div>
+            <label for="textinput" class="col-lg-2 control-label">org</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" id="factsorg" placeholder="if left empty the original value is kept"}}
+            </div>
+            <label for="textinput" class="col-lg-2 control-label">user</label>
+            <div class="col-lg-10">
+              {{input class="form-control" type="text" id="factsuser" placeholder="if left empty the original value is kept"}}
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+               <button type="button" class="btn btn-success" {{action "editFiles"}}>Edit Files</button> 
+               <button type="button" class="btn btn-success" {{action "goexport"}}>Download All</button> 
+            </div>
+          </div>
+        </form>
+        <pre id="log"></pre>
+		<!--  End of Template Code -->
+        </div></div>
+	</script>
+
+	<form id="emberForm" method="post" >
+        <div id="ember-app"></div>
+    </form>
+
+	</body>
+</html>
